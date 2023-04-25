@@ -1,0 +1,34 @@
+node_modules
+package-lock.json
+.vscode
+.DS_Store
+dist
+output
+.history
+build/script/analyse-import/output.js
+build/script/src/
+build/script/tmp/
+build/mock/index.ts
+
+# local env files
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode/launch.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.vim
+
+inspect.js
+yarn.lock 
+# /env.local.json
+# build/config/env.local.js
+# build/config/env.local.js
