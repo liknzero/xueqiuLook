@@ -1,6 +1,6 @@
-const fs = require('fs')
+const { readFileSync, writeFileSync, readdirSync, mkdirSync } = require('fs')
 var request = require('request');
-
+const path = "./"
 // 获取数据源
 const getXueQiuJson = () => {
   const getJsonUrl = 'https://stock.xueqiu.com/v5/stock/screener/quote/list.json?page=2&size=90&order=desc&orderby=percent&order_by=percent&market=CN&type=sh_sz'
@@ -16,41 +16,39 @@ const getXueQiuJson = () => {
     //body 当前接口response返回的具体数据 返回的是一个jsonString类型的数据 
     //需要通过JSON.parse(body)来转换
     if(!err && response.statusCode == 200){
-      //todoJSON.parse(body)
-      // console.log(body)
-      // var res = JSON.parse(body);
+      const list = JSON.parse(body).data.list
+      onWriteDir(JSON.stringify(list, '', "\t"))
     }
   })
 
 }
-// 获取目录下所有文件夹名称
-const getAllDirName = () => {
-  const readDir = fs.readdirSync("./");
-  console.log(readDir);
-  return readDir
-}
-// 获取当前日期
-const getDirName = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  return `${year}年${month}月`
-}
-// 生成文件
-const writeFile = (txt, success) => {
-  // 具有文件名，内容和回调函数的writeFile函数
-  fs.writeFile('newfile.txt', 'Learn Node FS module111', function (err) { 
+// 生成文件目录
+const onWriteDir = (jsonString) => {
+  const { dirName, fileName } = getDirAndFileName()
+  // 获取目录下所有文件夹名称
+  const allDirName = readdirSync(path);
+  if (!allDirName.includes(dirName)) {
+    mkdirSync(`${path}/${dirName}`);
+  } 
+  writeFileSync(`${path}/${dirName}/${fileName}.json`, jsonString, function (err) { 
     if (err) throw err; 
     success()
     console.log('File is created successfully.'); 
-  });
-}
-// 生成文件夹
-const writeDIr = (dirName, success) => {
-  fs.mkdirSync(`dirName`, (err) => {
-    if (err) throw err; 
-    success()
-  });
+  })
 }
 
+// 获取当前日期
+const getDirAndFileName = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  const date = now.getDate();
+  return {
+    dirName: `${year}-${month}`,
+    fileName: `${year}-${month}-${date}`
+  }
+}
+
+
 // getAllDirName()
+getXueQiuJson()
