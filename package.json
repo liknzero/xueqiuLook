@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/liknzero/xueqiuLook#readme",
   "dependencies": {
+    "puppeteer": "^19.11.1",
     "request": "^2.88.2"
   }
 }
