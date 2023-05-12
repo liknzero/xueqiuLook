@@ -20,9 +20,10 @@
   },
   "homepage": "https://github.com/liknzero/xueqiuLook#readme",
   "dependencies": {
+    "core-js": "^3.8.3",
+    "element-plus": "^2.3.4",
     "puppeteer": "^19.11.1",
     "request": "^2.88.2",
-    "core-js": "^3.8.3",
     "vue": "^3.2.13"
   },
   "devDependencies": {

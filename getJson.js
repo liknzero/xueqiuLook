@@ -26,7 +26,7 @@ const getXueQiuJson = async () => {
   await browser.close();
   
   console.log(cookiesUrl)
-  const getJsonUrl = 'https://stock.xueqiu.com/v5/stock/screener/quote/list.json?page=2&size=90&order=desc&orderby=percent&order_by=percent&market=CN&type=sh_sz'
+  const getJsonUrl = 'https://stock.xueqiu.com/v5/stock/screener/quote/list.json?page=1&size=5000&order=desc&orderby=percent&order_by=percent&market=CN&type=sh_sz'
   const headers = {
     "content-type": "application/json",
     Cookie: cookiesUrl
