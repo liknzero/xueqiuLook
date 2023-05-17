@@ -3,11 +3,14 @@
     <el-table-column prop="symbol" label="股票代码">
       <template #default="scope">{{ scope.row.date || "1111" }}</template>
     </el-table-column>
-    <el-table-column prop="name" label="股票名称"> </el-table-column>
+    <el-table-column prop="name" label="股票名称">
+      <template #default="scope">{{ scope.row.date || "1111" }}</template>
+    </el-table-column>
     <el-table-column prop="current" label="当前价"> </el-table-column>
     <el-table-column prop="chg" label="涨跌额"> </el-table-column>
     <el-table-column prop="percent" label="涨跌幅"> </el-table-column>
     <el-table-column prop="current_year_percent" label="年初至今">
+
     </el-table-column>
     <el-table-column prop="volume" label="成交量"> </el-table-column>
     <el-table-column prop="amount" label="成交额"> </el-table-column>
@@ -18,7 +21,7 @@
   </el-table>
 </template>
 
-<script lang="ts" setup>
+<script>
 const data = [
   {
     date: "2016-05-03",
@@ -41,4 +44,15 @@ const data = [
     address: "No. 189, Grove St, Los Angeles",
   },
 ];
+
+export default {
+  name: 'tabelShow',
+  components: {
+  },
+  data () {
+    return {
+      data
+    }
+  }
+}
 </script>

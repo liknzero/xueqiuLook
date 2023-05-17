@@ -1,14 +1,14 @@
 <template>
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <TableShow />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TableShow from './components/table-show.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TableShow
   }
 }
 </script>
