@@ -3,8 +3,41 @@ const request = require('request');
 const puppeteer = require('puppeteer')
 
 const path = "./"
+const tokenPath = './token.json';
 // 获取数据源
 const getXueQiuJson = async () => {
+  const tokenInfo = JSON.parse(await readFileSync(tokenPath, 'utf-8'))
+  const times = Math.floor(new Date().getTime() / 1000)
+  let cookiesUrl = ''
+  if (tokenInfo.timespace && (times - tokenInfo.timespace) < 14400) {
+    cookiesUrl = tokenInfo.token
+  } else {
+    cookiesUrl = await getToken()
+    writeFileSync(tokenPath, JSON.stringify({
+      timespace: times,
+      token: cookiesUrl
+    }, '', "\t"))
+  }
+  
+  const getJsonUrl = 'https://stock.xueqiu.com/v5/stock/screener/quote/list.json?page=1&size=5000&order=desc&orderby=percent&order_by=percent&market=CN&type=sh_sz'
+  const headers = {
+    "content-type": "application/json",
+    Cookie: cookiesUrl
+  }
+  request(getJsonUrl, {
+    headers,
+  }, function(err, response, body){
+    //err 当前接口请求错误信息
+    //response 一般使用statusCode来获取接口的http的执行状态
+    //body 当前接口response返回的具体数据 返回的是一个jsonString类型的数据 
+    if(!err && response.statusCode == 200){
+      const list = JSON.parse(body).data.list
+      onWriteDir(JSON.stringify(list, '', "\t"))
+    }
+  })
+}
+// 获取token
+const getToken = async () => {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto('https://xueqiu.com/hq#exchange=CN&firstName=1&secondName=1_0');
@@ -24,24 +57,7 @@ const getXueQiuJson = async () => {
   const cookiesUrl = cookiesUrlJoin.join('; ')
   await page.close();
   await browser.close();
-  
-  console.log(cookiesUrl)
-  const getJsonUrl = 'https://stock.xueqiu.com/v5/stock/screener/quote/list.json?page=1&size=5000&order=desc&orderby=percent&order_by=percent&market=CN&type=sh_sz'
-  const headers = {
-    "content-type": "application/json",
-    Cookie: cookiesUrl
-  }
-  request(getJsonUrl, {
-    headers,
-  }, function(err, response, body){
-    //err 当前接口请求错误信息
-    //response 一般使用statusCode来获取接口的http的执行状态
-    //body 当前接口response返回的具体数据 返回的是一个jsonString类型的数据 
-    if(!err && response.statusCode == 200){
-      const list = JSON.parse(body).data.list
-      onWriteDir(JSON.stringify(list, '', "\t"))
-    }
-  })
+  return cookiesUrl
 }
 // 生成文件目录
 const onWriteDir = (jsonString) => {
