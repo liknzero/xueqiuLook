@@ -31,20 +31,65 @@
   <el-table :data="data" fixed>
     <el-table-column prop="symbol" label="股票代码" width="150">
       <template #default="scope">
-        <a :href="`https://xueqiu.com/S/${scope.row.symbol}`" target="_blank">{{ scope.row.symbol }}</a>
+        <a :href="`https://xueqiu.com/S/${scope.row.symbol}`" target="_blank">{{
+          scope.row.symbol
+        }}</a>
       </template>
     </el-table-column>
     <el-table-column prop="name" label="股票名称" width="150">
       <template #default="scope">
-        <a :href="`https://xueqiu.com/S/${scope.row.symbol}`" target="_blank">{{ scope.row.name }}</a>
+        <a :href="`https://xueqiu.com/S/${scope.row.symbol}`" target="_blank">{{
+          scope.row.name
+        }}</a>
       </template>
     </el-table-column>
     <el-table-column prop="current" label="当前价" width="150">
+      <template #default="scope">
+        <span
+          :class="{
+            'default-txt': true,
+            'red-txt': scope.row.current > 0,
+            'green-txt': scope.row.current < 0,
+          }"
+          >{{ scope.row.current }}</span
+        >
+      </template>
     </el-table-column>
-    <el-table-column prop="chg" label="涨跌额" width="150"> </el-table-column>
+    <el-table-column prop="chg" label="涨跌额" width="150">
+      <template #default="scope">
+        <span
+          :class="{
+            'default-txt': true,
+            'red-txt': scope.row.chg > 0,
+            'green-txt': scope.row.chg < 0,
+          }"
+          >{{ scope.row.chg }}</span
+        >
+      </template>
+    </el-table-column>
     <el-table-column prop="percent" label="涨跌幅(%)" width="150">
+      <template #default="scope">
+        <span
+          :class="{
+            'default-txt': true,
+            'red-txt': scope.row.percent > 0,
+            'green-txt': scope.row.percent < 0,
+          }"
+          >{{ scope.row.percent }}</span
+        >
+      </template>
     </el-table-column>
     <el-table-column prop="current_year_percent" label="年初至今" width="150">
+      <template #default="scope">
+        <span
+          :class="{
+            'default-txt': true,
+            'red-txt': scope.row.current_year_percent > 0,
+            'green-txt': scope.row.current_year_percent < 0,
+          }"
+          >{{ scope.row.current_year_percent }}</span
+        >
+      </template>
     </el-table-column>
     <el-table-column prop="volume" label="成交量(万)" width="150">
     </el-table-column>
@@ -147,3 +192,14 @@ export default {
   },
 };
 </script>
+<style scoped>
+.default-txt {
+  color: #000;
+}
+.red-txt {
+  color: red;
+}
+.green-txt {
+  color: green;
+}
+</style>
