@@ -19,14 +19,20 @@ app.get('/get-json', function (req, res) {
     const defaultQuery = {
         marketLeft: null,
         marketRight: null,
+        name: '',
+        symbol: '',
         time: '',
         size: 10,
         page: 1
     }
     Object.assign(defaultQuery, {
-        time: req.query.time || moment().format('YYYY-M-D'),
+        name: req.query.name || '',
+        symbol: req.query.symbol || '',
         page: req.query.page || 1,
-        size: req.query.size || 10
+        size: req.query.size || 10,
+        marketLeft: req.query.marketLeft * 100000000,
+        marketRight: req.query.marketRight * 100000000,
+        time: req.query.time || moment().format('YYYY-M-D'),
     })
     
     const a = defaultQuery.time.split('-')
@@ -41,8 +47,28 @@ app.get('/get-json', function (req, res) {
     }
     let code = 0
     if (existsSync(c)) {
-        const { page, size } = defaultQuery
-        const record = JSON.parse(readFileSync(c, 'utf-8'))
+        const { name, symbol, page, size,marketLeft, marketRight } = defaultQuery
+        let record = JSON.parse(readFileSync(c, 'utf-8'))
+        record = record.filter(i => {
+            let filterNameAndSymbol = true
+            if (name || symbol) {
+               filterNameAndSymbol = (name && i.name.includes(name)) || (symbol && i.symbol.includes(symbol))
+            }
+            if (!filterNameAndSymbol) {
+                return false
+            }
+
+            if (marketLeft && marketRight) {
+                return marketLeft < i.market_capital && i.market_capital < marketRight
+            }
+            if (marketLeft) {
+                return i.market_capital > marketLeft 
+            }
+            if (marketRight) {
+                return i.market_capital < marketRight 
+            }
+            return true
+        })
         Object.assign(data, {
             total: record.length,
             record: record.slice((page-1)*size, page*size)

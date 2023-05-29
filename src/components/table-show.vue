@@ -1,6 +1,6 @@
 <template>
-  <el-form :model="formState">
-    <el-form-item label="市值范围">
+  <el-form :model="formState" :inline="true">
+    <el-form-item label="市值范围(亿)">
       <el-input-number
         v-model="formState.marketLeft"
         :step="1"
@@ -14,6 +14,12 @@
         :step="1"
         placeholder="请输入"
       />
+    </el-form-item>
+    <el-form-item label="股票名称">
+      <el-input v-model="formState.name" />
+    </el-form-item>
+    <el-form-item label="股票代码">
+      <el-input v-model="formState.symbol" />
     </el-form-item>
     <el-form-item label="时间">
       <el-date-picker
@@ -67,7 +73,7 @@
         >
       </template>
     </el-table-column>
-    <el-table-column prop="percent" label="涨跌幅(%)" width="150">
+    <el-table-column prop="percent" label="涨跌幅" width="150">
       <template #default="scope">
         <span
           :class="{
@@ -75,7 +81,7 @@
             'red-txt': scope.row.percent > 0,
             'green-txt': scope.row.percent < 0,
           }"
-          >{{ scope.row.percent }}</span
+          >{{ scope.row.percent }}%</span
         >
       </template>
     </el-table-column>
@@ -87,19 +93,34 @@
             'red-txt': scope.row.current_year_percent > 0,
             'green-txt': scope.row.current_year_percent < 0,
           }"
-          >{{ scope.row.current_year_percent }}</span
+          >{{ scope.row.current_year_percent }}%</span
         >
       </template>
     </el-table-column>
     <el-table-column prop="volume" label="成交量(万)" width="150">
+      <template #default="scope">
+        <span>{{ Math.ceil(scope.row.volume / 10000) }}</span>
+      </template>
     </el-table-column>
     <el-table-column prop="amount" label="成交额(亿)" width="150">
+      <template #default="scope">   
+        <span>{{ Math.ceil(scope.row.amount / 100000000) }}</span>
+      </template>
     </el-table-column>
-    <el-table-column prop="turnover_rate" label="换手率(%)" width="150">
+    <el-table-column prop="turnover_rate" label="换手率" width="150">
+      <template #default="scope">   
+        <span>{{ scope.row.turnover_rate }}%</span>
+      </template>
     </el-table-column>
     <el-table-column prop="pe_ttm" label="市盈率(TTM)" width="150">
+      <template #default="scope">   
+        <span>{{ scope.row.pe_ttm }}%</span>
+    </template>
     </el-table-column>
     <el-table-column prop="dividend_yield" label="股息率(%)" width="150">
+      <template #default="scope">   
+        <span>{{ scope.row.dividend_yield }}%</span>
+      </template>
     </el-table-column>
     <el-table-column
       prop="market_capital"
@@ -107,7 +128,9 @@
       width="150"
       fixed="right"
     >
-      <template #default="scope">{{ scope.row.market_capital }}</template>
+      <template #default="scope">
+        <span>{{ Math.ceil(scope.row.market_capital / 100000000) }}亿</span>
+      </template>
     </el-table-column>
   </el-table>
   <el-pagination
@@ -130,10 +153,17 @@ import axios from "axios";
 export default {
   name: "tabelShow",
   components: {},
+  filters: {
+    getWan: (num) => {
+      return Math.ceil(num / 10000)
+    }
+  },
   data() {
     return {
       data: [],
       formState: {
+        name: '',
+        symbol: '',
         marketLeft: null,
         marketRight: null,
         time: "",
