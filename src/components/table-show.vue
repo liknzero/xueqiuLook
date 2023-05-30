@@ -21,6 +21,12 @@
     <el-form-item label="股票代码">
       <el-input v-model="formState.symbol" />
     </el-form-item>
+    <el-form-item label="市盈率(*以下)">
+      <el-input v-model="formState.peTTM" />
+    </el-form-item>
+    <el-form-item label="股息率(*以上)">
+      <el-input v-model="formState.dividendYield" />
+    </el-form-item>
     <el-form-item label="时间">
       <el-date-picker
         v-model="formState.time"
@@ -97,29 +103,29 @@
         >
       </template>
     </el-table-column>
-    <el-table-column prop="volume" label="成交量(万)" width="150">
+    <el-table-column prop="volume" label="成交量" width="150">
       <template #default="scope">
-        <span>{{ Math.ceil(scope.row.volume / 10000) }}</span>
+        <span>{{ getMoneyToText(scope.row.volume) }}</span>
       </template>
     </el-table-column>
-    <el-table-column prop="amount" label="成交额(亿)" width="150">
-      <template #default="scope">   
-        <span>{{ Math.ceil(scope.row.amount / 100000000) }}</span>
+    <el-table-column prop="amount" label="成交额" width="150">
+      <template #default="scope">
+        <span>{{ getMoneyToText(scope.row.amount) }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="turnover_rate" label="换手率" width="150">
-      <template #default="scope">   
-        <span>{{ scope.row.turnover_rate }}%</span>
+      <template #default="scope">
+        <span>{{ getPercentage(scope.row.turnover_rate) }}</span>
       </template>
     </el-table-column>
     <el-table-column prop="pe_ttm" label="市盈率(TTM)" width="150">
-      <template #default="scope">   
-        <span>{{ scope.row.pe_ttm }}%</span>
-    </template>
+      <template #default="scope">
+        <span>{{ getPeTTM(scope.row.pe_ttm) }}</span>
+      </template>
     </el-table-column>
-    <el-table-column prop="dividend_yield" label="股息率(%)" width="150">
-      <template #default="scope">   
-        <span>{{ scope.row.dividend_yield }}%</span>
+    <el-table-column prop="dividend_yield" label="股息率" width="150">
+      <template #default="scope">
+        <span>{{ getPercentage(scope.row.dividend_yield) }}</span>
       </template>
     </el-table-column>
     <el-table-column
@@ -155,18 +161,20 @@ export default {
   components: {},
   filters: {
     getWan: (num) => {
-      return Math.ceil(num / 10000)
-    }
+      return Math.ceil(num / 10000);
+    },
   },
   data() {
     return {
       data: [],
       formState: {
-        name: '',
-        symbol: '',
+        name: "",
+        time: "",
+        symbol: "",
+        peTTM: null,
         marketLeft: null,
         marketRight: null,
-        time: "",
+        dividendYield: null,
       },
       pageInfo: {
         total: 0,
@@ -180,6 +188,29 @@ export default {
     this.findFileDir(this.formState);
   },
   methods: {
+    getMoneyToText(num) {
+      console.log(num);
+      if (num > 100000000) {
+        return `${(num / 100000000).toFixed(2)}亿`;
+      } else if (num > 10000000) {
+        return `${(num / 10000).toFixed(2)}万`;
+      }
+      return `${(num / 10000).toFixed(2)}万`;
+    },
+    getPercentage(num) {
+      if (!num) {
+        return "-";
+      }
+      return `${num}%`;
+    },
+    getPeTTM (ttm) {
+      if (ttm > 0) {
+        return ttm.toFixed(2)
+      }else if (ttm < 0) {
+        return '亏损'
+      }
+      return '-'
+    },
     momentTime(times) {
       return times
         ? moment(times).format("YYYY-M-D")
