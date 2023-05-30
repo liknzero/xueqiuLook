@@ -40,15 +40,15 @@
     </el-form-item>
   </el-form>
 
-  <el-table :data="data" fixed>
-    <el-table-column prop="symbol" label="股票代码" width="150">
+  <el-table :data="data" fixed :height="'calc(100vh-100px)'">
+    <el-table-column prop="symbol" label="股票代码" width="150" fixed="left">
       <template #default="scope">
         <a :href="`https://xueqiu.com/S/${scope.row.symbol}`" target="_blank">{{
           scope.row.symbol
         }}</a>
       </template>
     </el-table-column>
-    <el-table-column prop="name" label="股票名称" width="150">
+    <el-table-column prop="name" label="股票名称" width="150" fixed="left">
       <template #default="scope">
         <a :href="`https://xueqiu.com/S/${scope.row.symbol}`" target="_blank">{{
           scope.row.name
