@@ -203,13 +203,13 @@ export default {
       }
       return `${num}%`;
     },
-    getPeTTM (ttm) {
+    getPeTTM(ttm) {
       if (ttm > 0) {
-        return ttm.toFixed(2)
-      }else if (ttm < 0) {
-        return '亏损'
+        return ttm.toFixed(2);
+      } else if (ttm < 0) {
+        return "亏损";
       }
-      return '-'
+      return "-";
     },
     momentTime(times) {
       return times
