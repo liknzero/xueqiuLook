@@ -1,25 +1,19 @@
 <template>
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <TableShow />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import TableShow from './components/table-show.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    TableShow
   }
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
